@@ -16,9 +16,10 @@ def check_requirements():
     try:
         import streamlit
         import requests
-        import beautifulsoup4
+        import bs4
         import pandas
         import plotly
+        import fake_useragent
         print("✅ Tất cả thư viện đã được cài đặt")
         return True
     except ImportError as e:
@@ -35,21 +36,7 @@ def main():
     if not check_requirements():
         sys.exit(1)
     
-    # Chọn phiên bản app
-    print("\n📱 Chọn phiên bản ứng dụng:")
-    print("1. Phiên bản cơ bản (app.py)")
-    print("2. Phiên bản nâng cao với biểu đồ (app_advanced.py)")
-    
-    while True:
-        choice = input("\nNhập lựa chọn (1 hoặc 2): ").strip()
-        if choice == "1":
-            app_file = "app.py"
-            break
-        elif choice == "2":
-            app_file = "app_advanced.py"
-            break
-        else:
-            print("❌ Vui lòng chọn 1 hoặc 2")
+    app_file = "app_advanced.py"
     
     # Kiểm tra file tồn tại
     if not Path(app_file).exists():

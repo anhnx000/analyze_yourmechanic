@@ -1,14 +1,13 @@
 # Sử dụng Python 3.9 slim làm base image
-FROM python:3.9-slim
+FROM --platform=linux/amd64 python:3.9-slim
 
 # Thiết lập thư mục làm việc
 WORKDIR /app
 
 # Cài đặt các package hệ thống cần thiết
 RUN apt-get update && apt-get install -y \
-    build-essential \
     curl \
-    software-properties-common \
+    build-essential \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements trước để tận dụng Docker layer caching
@@ -43,5 +42,5 @@ fileWatcherType = \"none\"\n\
 # Thiết lập health check
 HEALTHCHECK CMD curl --fail http://localhost:8501/_stcore/health
 
-# Chạy ứng dụng Streamlit
-CMD ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"] 
+# Chạy ứng dụng Streamlit Advanced
+CMD ["streamlit", "run", "app_advanced.py", "--server.port=8501", "--server.address=0.0.0.0"] 

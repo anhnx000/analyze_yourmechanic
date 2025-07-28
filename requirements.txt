@@ -2,8 +2,5 @@ streamlit
 requests
 beautifulsoup4
 pandas
-lxml
-selenium
 fake-useragent
-urllib3
 plotly

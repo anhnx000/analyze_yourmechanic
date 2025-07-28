@@ -2,10 +2,8 @@ import streamlit as st
 import pandas as pd
 import time
 import plotly.express as px
-import plotly.graph_objects as go
 from datetime import datetime
 from scraper_advanced import YourMechanicAdvancedScraper
-import json
 
 # Cấu hình trang
 st.set_page_config(
@@ -18,29 +16,33 @@ st.set_page_config(
 # Custom CSS
 st.markdown("""
 <style>
+    /* Typography */
     .main-header {
         font-size: 3rem;
         color: #1f77b4;
         text-align: center;
         margin-bottom: 2rem;
     }
-    .service-card {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    
+    /* Cards */
+    .service-card, .price-metric, .sidebar-info {
         padding: 1rem;
         border-radius: 10px;
-        color: white;
         margin: 0.5rem 0;
     }
+    
+    .service-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+    
     .price-metric {
         background: #f0f2f6;
-        border-radius: 10px;
-        padding: 1rem;
         text-align: center;
     }
+    
     .sidebar-info {
         background: #e6f3ff;
-        padding: 1rem;
-        border-radius: 10px;
         border-left: 4px solid #1f77b4;
     }
 </style>
@@ -349,7 +351,7 @@ def main():
             
             if st.button("🗑️ Xóa danh sách so sánh"):
                 st.session_state.comparison_list = []
-                st.experimental_rerun()
+                st.rerun()
         else:
             st.info("📝 Chưa có dữ liệu để so sánh. Hãy thực hiện tìm kiếm và thêm vào so sánh.")
     

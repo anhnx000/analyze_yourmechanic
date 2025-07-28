@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import json
 import time
 import re
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional
 from urllib.parse import urljoin, quote
 from fake_useragent import UserAgent
 import logging
@@ -44,22 +44,23 @@ class YourMechanicAdvancedScraper:
             service_sections = soup.find_all(['div', 'section'], class_=re.compile(r'service|category'))
             
             for section in service_sections:
-                # Tìm tiêu đề danh mục
-                category_header = section.find(['h2', 'h3', 'h4'], class_=re.compile(r'category|heading'))
-                if category_header:
-                    category_name = category_header.get_text(strip=True)
-                    
-                    # Tìm danh sách dịch vụ trong danh mục
-                    service_links = section.find_all('a', href=re.compile(r'/services/'))
-                    services = []
-                    
-                    for link in service_links:
-                        service_name = link.get_text(strip=True)
-                        if service_name and len(service_name) > 5:  # Filter out empty or very short text
-                            services.append(service_name)
-                    
-                    if services:
-                        categories[category_name] = services[:15]  # Limit to 15 services per category
+                if hasattr(section, 'find'):  # Ensure section is a Tag, not NavigableString
+                    # Tìm tiêu đề danh mục
+                    category_header = section.find(['h2', 'h3', 'h4'], class_=re.compile(r'category|heading'))
+                    if category_header:
+                        category_name = category_header.get_text(strip=True)
+                        
+                        # Tìm danh sách dịch vụ trong danh mục
+                        service_links = section.find_all('a', href=re.compile(r'/services/'))
+                        services = []
+                        
+                        for link in service_links:
+                            service_name = link.get_text(strip=True)
+                            if service_name and len(service_name) > 5:  # Filter out empty or very short text
+                                services.append(service_name)
+                        
+                        if services:
+                            categories[category_name] = services[:15]  # Limit to 15 services per category
             
             return categories if categories else self._get_fallback_categories()
             
@@ -122,7 +123,7 @@ class YourMechanicAdvancedScraper:
             
             # Tìm dropdown hoặc select cho hãng xe
             make_select = soup.find('select', attrs={'name': re.compile(r'make|brand', re.I)})
-            if make_select:
+            if make_select and hasattr(make_select, 'find_all'):
                 options = make_select.find_all('option')
                 makes = [opt.get_text(strip=True) for opt in options if opt.get_text(strip=True)]
                 return makes[1:]  # Skip first empty option

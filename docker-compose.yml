@@ -1,14 +1,18 @@
 version: '3.8'
 
 services:
-  yourmechanic-app:
-    build: .
+  app:
+    build:
+      context: .
+      platforms:
+        - linux/amd64
     container_name: yourmechanic-crawler
     ports:
       - "8511:8501"  # Ánh xạ cổng local 8511 vào cổng 8501 trong container
     environment:
       - STREAMLIT_SERVER_PORT=8501
       - STREAMLIT_SERVER_ADDRESS=0.0.0.0
+      - PYTHONUNBUFFERED=1
     restart: unless-stopped
     volumes:
       # Nếu muốn mount code để development (tùy chọn)
@@ -19,4 +23,5 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 30s 
+      start_period: 45s
+    mem_limit: 1g  # Giảm memory limit vì không còn Chrome 

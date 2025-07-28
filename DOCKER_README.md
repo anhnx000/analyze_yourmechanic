@@ -6,13 +6,14 @@ Hướng dẫn đóng gói và chạy ứng dụng YourMechanic Price Checker b�
 
 - Docker Desktop hoặc Docker Engine
 - Docker Compose (tùy chọn, nhưng được khuyến nghị)
+- Tối thiểu 2GB RAM trống
 
 ## 🚀 Cách sử dụng
 
 ### 1. Sử dụng Script Tự động (Khuyến nghị)
 
 ```bash
-# Khởi động ứng dụng (tự động build và chạy)
+# Khởi động ứng dụng
 ./docker-run.sh start
 
 # Xem logs
@@ -23,6 +24,9 @@ Hướng dẫn đóng gói và chạy ứng dụng YourMechanic Price Checker b�
 
 # Khởi động lại
 ./docker-run.sh restart
+
+# Theo dõi tài nguyên
+./docker-run.sh monitor
 
 # Chỉ build image
 ./docker-run.sh build
@@ -48,13 +52,21 @@ docker-compose restart
 
 ```bash
 # Build image
-docker build -t yourmechanic-app .
+docker build --platform linux/amd64 -t yourmechanic-app .
 
 # Chạy container
 docker run -d \
     --name yourmechanic-crawler \
     -p 8511:8501 \
     --restart unless-stopped \
+    --memory=2g \
+    --shm-size=2g \
+    --security-opt seccomp:unconfined \
+    -v /dev/shm:/dev/shm \
+    -e DISPLAY=:99 \
+    -e CHROME_BIN=/usr/bin/google-chrome \
+    -e CHROME_PATH=/usr/bin/google-chrome \
+    -e PYTHONUNBUFFERED=1 \
     yourmechanic-app
 
 # Xem logs
@@ -84,6 +96,9 @@ Có thể tùy chỉnh trong `docker-compose.yml`:
 environment:
   - STREAMLIT_SERVER_PORT=8501
   - STREAMLIT_SERVER_ADDRESS=0.0.0.0
+  - DISPLAY=:99
+  - CHROME_BIN=/usr/bin/google-chrome
+  - CHROME_PATH=/usr/bin/google-chrome
 ```
 
 ## 🔧 Troubleshooting
@@ -113,7 +128,7 @@ docker ps -a
 docker system prune -f
 
 # Rebuild từ đầu
-docker build --no-cache -t yourmechanic-app .
+docker build --no-cache --platform linux/amd64 -t yourmechanic-app .
 ```
 
 ## 📁 Cấu trúc Docker Files
@@ -121,9 +136,9 @@ docker build --no-cache -t yourmechanic-app .
 ```
 ├── Dockerfile              # Định nghĩa Docker image
 ├── docker-compose.yml      # Cấu hình Docker Compose  
-├── .dockerignore           # Files bị loại trừ khi build
-├── docker-run.sh           # Script tiện ích
-└── DOCKER_README.md        # Hướng dẫn này
+├── .dockerignore          # Files bị loại trừ khi build
+├── docker-run.sh          # Script tiện ích
+└── DOCKER_README.md       # Hướng dẫn này
 ```
 
 ## ⚡ Performance Tips
@@ -147,7 +162,7 @@ docker build --no-cache -t yourmechanic-app .
 volumes:
   - .:/app
   - /app/__pycache__
-command: ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0", "--server.fileWatcherType=poll"]
+command: ["streamlit", "run", "app_advanced.py", "--server.port=8501", "--server.address=0.0.0.0", "--server.fileWatcherType=poll"]
 ```
 
 ## 📊 Monitoring
@@ -163,6 +178,14 @@ docker stats yourmechanic-crawler
 # Health check status
 docker inspect yourmechanic-crawler | grep Health -A 10
 ```
+
+## 🌟 Tính năng
+
+- ✅ Selenium scraping với Chrome headless
+- ✅ Biểu đồ Plotly interactive  
+- ✅ Phân tích giá nâng cao
+- ✅ Lưu lịch sử và so sánh
+- ⚠️ Yêu cầu 2GB+ RAM
 
 ---
 

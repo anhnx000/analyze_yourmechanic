@@ -10,12 +10,13 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
+PURPLE='\033[0;35m'
 NC='\033[0m' # No Color
 
 # Print functions
 print_header() {
-    echo -e "${BLUE}🔧 YourMechanic Docker Runner${NC}"
-    echo -e "${BLUE}================================${NC}"
+    echo -e "${PURPLE}🚀 YourMechanic Docker Runner${NC}"
+    echo -e "${PURPLE}==========================================${NC}"
 }
 
 print_success() {
@@ -52,7 +53,10 @@ check_docker() {
 # Build Docker image
 build_image() {
     print_info "Đang build Docker image..."
-    docker build -t yourmechanic-app .
+    print_info "Platform: linux/amd64"
+    
+    docker build --platform linux/amd64 -t yourmechanic-app .
+    
     print_success "Build thành công!"
 }
 
@@ -61,29 +65,35 @@ run_with_compose() {
     print_info "Đang khởi động ứng dụng với Docker Compose..."
     docker-compose up -d
     print_success "Ứng dụng đã được khởi động!"
-    print_info "Truy cập ứng dụng tại: http://localhost:8511"
+    print_info "🌐 Truy cập ứng dụng tại: http://localhost:8511"
+    print_info "📊 Giao diện có biểu đồ và scraping nâng cao"
 }
 
 # Run with Docker
 run_with_docker() {
     print_info "Đang khởi động ứng dụng với Docker..."
     
+    local container_name="yourmechanic-crawler"
+    
     # Stop existing container if running
-    if docker ps -q -f name=yourmechanic-crawler | grep -q .; then
-        print_warning "Đang dừng container cũ..."
-        docker stop yourmechanic-crawler
-        docker rm yourmechanic-crawler
+    if docker ps -q -f name=$container_name | grep -q .; then
+        print_warning "Đang dừng container cũ: $container_name"
+        docker stop $container_name
+        docker rm $container_name
     fi
     
-    # Run new container
+    # Run container
     docker run -d \
-        --name yourmechanic-crawler \
+        --name $container_name \
         -p 8511:8501 \
         --restart unless-stopped \
+        --memory=1g \
+        -e PYTHONUNBUFFERED=1 \
         yourmechanic-app
         
     print_success "Ứng dụng đã được khởi động!"
-    print_info "Truy cập ứng dụng tại: http://localhost:8511"
+    print_info "🌐 Truy cập ứng dụng tại: http://localhost:8511"
+    print_info "📊 Giao diện có biểu đồ và scraping nâng cao"
 }
 
 # Stop containers
@@ -107,6 +117,17 @@ show_logs() {
     if docker ps -q -f name=yourmechanic-crawler | grep -q .; then
         print_info "Hiển thị logs của container..."
         docker logs -f yourmechanic-crawler
+    else
+        print_error "Container không đang chạy!"
+    fi
+}
+
+# Monitor resources
+monitor_resources() {
+    if docker ps -q -f name=yourmechanic-crawler | grep -q .; then
+        print_info "📊 Theo dõi tài nguyên container..."
+        print_warning "⚠️  Nhấn Ctrl+C để thoát"
+        docker stats yourmechanic-crawler
     else
         print_error "Container không đang chạy!"
     fi
@@ -139,6 +160,10 @@ main() {
             check_docker
             show_logs
             ;;
+        "monitor"|"stats")
+            check_docker
+            monitor_resources
+            ;;
         "restart")
             check_docker
             stop_containers
@@ -160,8 +185,18 @@ main() {
             echo "  stop     - Dừng ứng dụng"
             echo "  restart  - Khởi động lại ứng dụng"
             echo "  logs     - Xem logs của ứng dụng"
+            echo "  monitor  - Theo dõi tài nguyên container"
             echo ""
-            print_info "Ví dụ: $0 start"
+            print_info "Ví dụ:"
+            echo "  $0 start    # Chạy ứng dụng"
+            echo ""
+            print_info "🌟 Tính năng:"
+            echo "   • 📊 Biểu đồ Plotly interactive"
+            echo "   • 🤖 Selenium scraping với Chrome headless"
+            echo "   • 📈 Phân tích giá nâng cao"
+            echo "   • 💾 Lưu lịch sử và so sánh"
+            echo ""
+            print_warning "⚠️  Yêu cầu tối thiểu: 2GB RAM"
             echo ""
             ;;
     esac
