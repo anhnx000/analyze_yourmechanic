@@ -156,24 +156,27 @@ def service_selection():
         with category_tabs[i]:
             st.subheader(f"{category_name} Services")
             
-            # Checkbox cho từng dịch vụ
-            for service in services:
+            # Checkbox cho từng dịch vụ với unique keys
+            for idx, service in enumerate(services):
                 col1, col2 = st.columns([3, 1])
                 with col1:
-                    if st.checkbox(service, key=f"service_{category_name}_{service}"):
+                    # Tạo unique key bằng cách thêm index và hash để tránh trùng lặp
+                    unique_key = f"service_{category_name}_{idx}_{hash(service) % 10000}"
+                    if st.checkbox(service, key=unique_key):
                         selected_services.append(service)
                 with col2:
-                    if st.button("ℹ️", key=f"info_{category_name}_{service}", help="Thông tin dịch vụ"):
+                    info_key = f"info_{category_name}_{idx}_{hash(service) % 10000}"
+                    if st.button("ℹ️", key=info_key, help="Thông tin dịch vụ"):
                         st.info(f"Dịch vụ: {service}")
     
     return selected_services
 
 def price_analysis(results, vehicle_info):
-    """Phân tích và hiển thị giá"""
+    """Phân tích và hiển thị giá chi tiết"""
     if not results:
         return
     
-    st.header("💰 Phân tích giá dịch vụ")
+    st.header("💰 Phân tích chi tiết dịch vụ")
     
     # Tạo DataFrame
     df = pd.DataFrame(results)
@@ -225,16 +228,146 @@ def price_analysis(results, vehicle_info):
         )
         st.plotly_chart(fig_pie, use_container_width=True)
     
-    # Bảng chi tiết
-    st.subheader("📊 Chi tiết báo giá")
+    # Chi tiết từng dịch vụ
+    st.subheader("📋 Chi tiết từng dịch vụ")
+    
+    for i, result in enumerate(results):
+        with st.expander(f"🔧 {result['service']} - ${result['avg_price']:,}", expanded=False):
+            
+            # Thông tin cơ bản
+            col1, col2, col3 = st.columns(3)
+            
+            with col1:
+                st.markdown("### 💰 Giá cả")
+                st.info(f"**Thấp nhất:** ${result['min_price']:,}")
+                st.success(f"**Trung bình:** ${result['avg_price']:,}")
+                st.error(f"**Cao nhất:** ${result['max_price']:,}")
+                
+                # Hiển thị cost breakdown nếu có
+                if 'cost_breakdown' in result:
+                    breakdown = result['cost_breakdown']
+                    st.markdown("#### 📊 Phân tích chi phí")
+                    st.write(f"💪 **Chi phí thợ:** ${breakdown['labor_cost']:,} ({breakdown['labor_hours']}h)")
+                    st.write(f"🔧 **Chi phí phụ tùng:** ${breakdown['parts_cost']:,}")
+                    st.write(f"🏪 **Vật tư xưởng:** ${breakdown['shop_supplies']:,}")
+                    st.write(f"💸 **Thuế ước tính:** ${breakdown['taxes']:,}")
+            
+            with col2:
+                st.markdown("### ⭐ Đánh giá")
+                if 'customer_rating' in result:
+                    rating = result['customer_rating']
+                    st.metric("Điểm trung bình", f"{rating['average_rating']}/5.0 ⭐")
+                    st.metric("Tổng đánh giá", f"{rating['total_reviews']:,} reviews")
+                    
+                    # Rating breakdown
+                    st.markdown("#### 📊 Phân bố đánh giá")
+                    for star, percent in rating['rating_breakdown'].items():
+                        stars = star.replace('_', ' ').title()
+                        st.write(f"{stars}: {percent}")
+                
+                st.markdown("### ⏱️ Thời gian")
+                st.info(f"**Ước tính:** {result.get('labor_time', 'N/A')}")
+                if 'availability' in result:
+                    avail = result['availability']
+                    st.write(f"**Thời gian hoàn thành:** {avail.get('estimated_duration', 'N/A')}")
+                    if avail.get('same_day_available'):
+                        st.success("✅ Có thể phục vụ trong ngày")
+            
+            with col3:
+                st.markdown("### 🛡️ Bảo hành")
+                if 'warranty_info' in result:
+                    warranty = result['warranty_info']
+                    st.success(f"**Phụ tùng:** {warranty['parts_warranty']}")
+                    st.success(f"**Thợ làm:** {warranty['labor_warranty']}")
+                    st.info(f"**Phạm vi:** {warranty['coverage']}")
+                    st.write(f"📝 {warranty['details']}")
+                
+                st.markdown("### 👨‍🔧 Thông tin thợ")
+                if 'mechanic_info' in result:
+                    mechanic = result['mechanic_info']
+                    if mechanic['certified_mechanics']:
+                        st.success("✅ Thợ được chứng nhận")
+                    st.write(f"**Kinh nghiệm:** {mechanic['average_experience']}")
+                    st.write(f"**Chứng chỉ:** {', '.join(mechanic['certifications'])}")
+                    if mechanic['mobile_service']:
+                        st.success("🚗 Dịch vụ tận nơi")
+            
+            # Mô tả dịch vụ
+            if 'service_description' in result:
+                st.markdown("### 📝 Mô tả dịch vụ")
+                st.write(result['service_description'])
+            
+            # Những gì được bao gồm
+            if 'whats_included' in result:
+                st.markdown("### ✅ Dịch vụ bao gồm")
+                for item in result['whats_included']:
+                    st.write(item)
+            
+            # Thông tin lịch hẹn
+            if 'availability' in result:
+                avail = result['availability']
+                st.markdown("### 📅 Thông tin lịch hẹn")
+                col1, col2 = st.columns(2)
+                
+                with col1:
+                    st.write(f"**Giờ phục vụ:** {avail['service_hours']}")
+                    st.write(f"**Thời gian đặt lịch:** {avail['typical_booking_time']}")
+                    if avail['weekend_available']:
+                        st.success("✅ Phục vụ cuối tuần")
+                
+                with col2:
+                    if avail['same_day_available']:
+                        st.success("✅ Phục vụ trong ngày")
+                    if avail.get('emergency_service'):
+                        st.warning("🚨 Dịch vụ khẩn cấp")
+                    else:
+                        st.info("ℹ️ Không có dịch vụ khẩn cấp")
+            
+            # Phí bổ sung
+            if 'additional_fees' in result:
+                fees = result['additional_fees']
+                st.markdown("### 💳 Phí bổ sung")
+                st.success(f"✅ {fees['note']}")
+                
+                fee_details = []
+                if fees['diagnostic_fee'] > 0:
+                    fee_details.append(f"Phí chẩn đoán: ${fees['diagnostic_fee']}")
+                if fees['disposal_fee'] > 0:
+                    fee_details.append(f"Phí xử lý môi trường: ${fees['disposal_fee']}")
+                if fees['travel_fee'] > 0:
+                    fee_details.append(f"Phí đi lại: ${fees['travel_fee']}")
+                
+                if fee_details:
+                    for detail in fee_details:
+                        st.write(f"• {detail}")
+            
+            # Địa điểm phục vụ
+            if 'mechanic_info' in result and 'service_locations' in result['mechanic_info']:
+                st.markdown("### 📍 Địa điểm phục vụ")
+                locations = result['mechanic_info']['service_locations']
+                for location in locations:
+                    st.write(f"• {location}")
+    
+    # Bảng tóm tắt
+    st.subheader("📊 Bảng tóm tắt")
     
     display_df = df.copy()
+    display_df['Dịch vụ'] = display_df['service']
     display_df['Giá thấp nhất'] = display_df['min_price'].apply(lambda x: f"${x:,}")
     display_df['Giá trung bình'] = display_df['avg_price'].apply(lambda x: f"${x:,}")
     display_df['Giá cao nhất'] = display_df['max_price'].apply(lambda x: f"${x:,}")
+    display_df['Thời gian'] = display_df['labor_time']
+    display_df['Nguồn'] = display_df['source']
     
-    final_df = display_df[['service', 'Giá thấp nhất', 'Giá trung bình', 'Giá cao nhất', 'labor_time']].copy()
-    final_df.columns = ['Dịch vụ', 'Giá thấp nhất', 'Giá trung bình', 'Giá cao nhất', 'Thời gian ước tính']
+    # Thêm cột rating nếu có
+    if 'customer_rating' in results[0]:
+        display_df['Đánh giá'] = display_df.apply(lambda row: 
+            f"{results[row.name].get('customer_rating', {}).get('average_rating', 'N/A')}⭐" 
+            if 'customer_rating' in results[row.name] else 'N/A', axis=1)
+    
+    final_df = display_df[['Dịch vụ', 'Giá thấp nhất', 'Giá trung bình', 'Giá cao nhất', 'Thời gian', 'Nguồn']].copy()
+    if 'Đánh giá' in display_df.columns:
+        final_df['Đánh giá'] = display_df['Đánh giá']
     
     st.dataframe(final_df, use_container_width=True)
     
@@ -257,12 +390,40 @@ def price_analysis(results, vehicle_info):
             st.success("✅ Đã thêm vào danh sách so sánh!")
     
     with col3:
-        # Xuất CSV
-        csv = final_df.to_csv(index=False)
+        # Xuất CSV chi tiết
+        detailed_csv_data = []
+        for result in results:
+            row = {
+                'Dịch vụ': result['service'],
+                'Giá thấp nhất': result['min_price'],
+                'Giá trung bình': result['avg_price'], 
+                'Giá cao nhất': result['max_price'],
+                'Thời gian': result['labor_time'],
+                'Nguồn': result['source']
+            }
+            
+            # Thêm thông tin chi tiết nếu có
+            if 'customer_rating' in result:
+                row['Đánh giá'] = result['customer_rating']['average_rating']
+                row['Số đánh giá'] = result['customer_rating']['total_reviews']
+            
+            if 'cost_breakdown' in result:
+                breakdown = result['cost_breakdown']
+                row['Chi phí thợ'] = breakdown['labor_cost']
+                row['Chi phí phụ tùng'] = breakdown['parts_cost']
+            
+            if 'warranty_info' in result:
+                row['Bảo hành phụ tùng'] = result['warranty_info']['parts_warranty']
+                row['Bảo hành thợ'] = result['warranty_info']['labor_warranty']
+            
+            detailed_csv_data.append(row)
+        
+        detailed_csv_df = pd.DataFrame(detailed_csv_data)
+        csv = detailed_csv_df.to_csv(index=False)
         st.download_button(
-            label="📥 Tải xuống CSV",
+            label="📥 Tải xuống CSV chi tiết",
             data=csv,
-            file_name=f"yourmechanic_quotes_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
+            file_name=f"yourmechanic_detailed_quotes_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
             mime='text/csv'
         )
 

@@ -1,0 +1,246 @@
+{
+  "categories": {
+    "Battery": [
+      "Battery Replacement",
+      "Auxiliary Battery Replacement",
+      "Car Battery Cable Replacement",
+      "Car Battery Replacement",
+      "Service Battery/cables",
+      "Alternator / Serpentine Belt Replacement"
+    ],
+    "Brakes": [
+      "Brake Pad Replacement",
+      "Brake Caliper Replacement",
+      "Brake Drum Replacement",
+      "Brake Hose Replacement",
+      "Brake Master Cylinder Replacement",
+      "Brake Rotors/Discs Replacement",
+      "Brake Shoe Replacement (Rear)",
+      "Brake System Flush",
+      "Brake Vacuum Pump Replacement",
+      "Brake Wheel Cylinder Replacement",
+      "Emergency/Parking Brake Cable Replacement",
+      "Emergency/Parking Brake Shoe Replacement",
+      "Emergency Brake Control Replacement",
+      "Parking Brake Release Cable Replacement",
+      "Vacuum Brake Booster Check Valve Replacement"
+    ],
+    "Engine": [
+      "Oil Change",
+      "Check engine light is on Diagnostic",
+      "Car AC Belt Replacement",
+      "Drive Belt Tensioner Replacement",
+      "Power Steering Belt Replacement",
+      "Serpentine/Drive Belt Replacement",
+      "Supercharger Belt Replacement",
+      "Timing Belt Replacement",
+      "Vacuum Pump Repair"
+    ],
+    "Transmission": [
+      "CV Axle / Shaft Assembly Replacement",
+      "Axle Shaft Seal Replacement"
+    ],
+    "Diagnostics": [
+      "Pre-purchase Car Inspection",
+      "Car is not starting Diagnostic"
+    ],
+    "Electrical": [
+      "ABS Speed Sensor Replacement",
+      "Wheel Speed Sensor Replacement"
+    ],
+    "Heating & AC": [
+      "Anti-Lock Control Relay Replacement",
+      "Anti-Lock Fuses Or Relay Replacement",
+      "Wheel Hub Assembly Replacement",
+      "Center Support Bearing Replacement"
+    ],
+    "Others": [
+      "Towing and Roadside"
+    ]
+  },
+  "makes": [
+    "Acura",
+    "Audi",
+    "BMW",
+    "Buick",
+    "Cadillac",
+    "Chevrolet",
+    "Chrysler",
+    "Dodge",
+    "Fiat",
+    "Ford",
+    "GMC",
+    "Honda",
+    "Hyundai",
+    "Infiniti",
+    "Jaguar",
+    "Jeep",
+    "Kia",
+    "Land Rover",
+    "Lexus",
+    "Lincoln",
+    "Mazda",
+    "Mercedes-Benz",
+    "Mini",
+    "Mitsubishi",
+    "Nissan",
+    "Porsche",
+    "Ram",
+    "Subaru",
+    "Toyota",
+    "Volkswagen",
+    "Volvo"
+  ],
+  "sample_pricing": {
+    "Oil Change": {
+      "service": "Oil Change",
+      "vehicle": "2020 Toyota Camry",
+      "location": "Estimated",
+      "min_price": 36,
+      "max_price": 72,
+      "avg_price": 54,
+      "labor_time": "0.6 giờ",
+      "parts_included": "Varies by service",
+      "source": "estimated",
+      "service_description": "Complete engine oil and filter replacement service. We drain old oil, replace filter, and refill with fresh oil suited for your vehicle.",
+      "whats_included": [
+        "✅ Up to 5 quarts of oil",
+        "✅ New oil filter",
+        "✅ Multi-point inspection",
+        "✅ Fluid level check",
+        "✅ Battery test"
+      ],
+      "warranty_info": {
+        "parts_warranty": "12 months or 12,000 miles",
+        "labor_warranty": "12 months or 12,000 miles",
+        "coverage": "Nationwide warranty coverage",
+        "details": "Warranty covers defects in parts and workmanship"
+      },
+      "customer_rating": {
+        "average_rating": 4.5,
+        "total_reviews": 234,
+        "rating_breakdown": {
+          "5_star": "72%",
+          "4_star": "20%",
+          "3_star": "5%",
+          "2_star": "2%",
+          "1_star": "1%"
+        }
+      },
+      "mechanic_info": {
+        "certified_mechanics": true,
+        "average_experience": "8+ years",
+        "certifications": [
+          "ASE Certified",
+          "Manufacturer Trained"
+        ],
+        "background_checked": true,
+        "mobile_service": true,
+        "service_locations": [
+          "At your location",
+          "Home",
+          "Office",
+          "Parking lot"
+        ]
+      },
+      "cost_breakdown": {
+        "labor_cost": 32,
+        "parts_cost": 22,
+        "labor_hours": 0.3,
+        "parts_list": "High-quality OEM or equivalent parts",
+        "shop_supplies": 2,
+        "taxes": 4
+      },
+      "additional_fees": {
+        "diagnostic_fee": 0,
+        "disposal_fee": 5,
+        "service_fee": 0,
+        "travel_fee": 0,
+        "note": "All fees included in quoted price"
+      },
+      "availability": {
+        "same_day_available": true,
+        "typical_booking_time": "2-4 hours advance notice",
+        "service_hours": "7 AM - 7 PM",
+        "weekend_available": true,
+        "emergency_service": false,
+        "estimated_duration": "30-45 minutes"
+      }
+    },
+    "Brake Pad Replacement": {
+      "service": "Brake Pad Replacement",
+      "vehicle": "2020 Toyota Camry",
+      "location": "Estimated",
+      "min_price": 108,
+      "max_price": 225,
+      "avg_price": 166,
+      "labor_time": "1.9 giờ",
+      "parts_included": "Varies by service",
+      "source": "estimated",
+      "service_description": "Professional brake pad replacement service including inspection of rotors, calipers, and brake system components.",
+      "whats_included": [
+        "✅ New brake pads/components",
+        "✅ Brake system inspection",
+        "✅ Rotor condition check",
+        "✅ Brake fluid level check",
+        "✅ Test drive verification"
+      ],
+      "warranty_info": {
+        "parts_warranty": "12 months or 12,000 miles",
+        "labor_warranty": "12 months or 12,000 miles",
+        "coverage": "Nationwide warranty coverage",
+        "details": "Warranty covers defects in parts and workmanship"
+      },
+      "customer_rating": {
+        "average_rating": 4.5,
+        "total_reviews": 234,
+        "rating_breakdown": {
+          "5_star": "72%",
+          "4_star": "20%",
+          "3_star": "5%",
+          "2_star": "2%",
+          "1_star": "1%"
+        }
+      },
+      "mechanic_info": {
+        "certified_mechanics": true,
+        "average_experience": "8+ years",
+        "certifications": [
+          "ASE Certified",
+          "Manufacturer Trained"
+        ],
+        "background_checked": true,
+        "mobile_service": true,
+        "service_locations": [
+          "At your location",
+          "Home",
+          "Office",
+          "Parking lot"
+        ]
+      },
+      "cost_breakdown": {
+        "labor_cost": 99,
+        "parts_cost": 67,
+        "labor_hours": 1.0,
+        "parts_list": "High-quality OEM or equivalent parts",
+        "shop_supplies": 8,
+        "taxes": 13
+      },
+      "additional_fees": {
+        "diagnostic_fee": 0,
+        "disposal_fee": 5,
+        "service_fee": 0,
+        "travel_fee": 0,
+        "note": "All fees included in quoted price"
+      },
+      "availability": {
+        "same_day_available": true,
+        "typical_booking_time": "2-4 hours advance notice",
+        "service_hours": "7 AM - 7 PM",
+        "weekend_available": true,
+        "emergency_service": false,
+        "estimated_duration": "1-2 hours"
+      }
+    }
+  }
+}
